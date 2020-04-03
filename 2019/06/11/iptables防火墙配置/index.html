@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Iptables是在Linux内核中的一个防火墙，今天写这篇博客是为了记录某个实验中对防火墙所需做的配置和过程中遇到的报错。">
+<meta name="keywords" content="防火墙">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iptables防火墙配置">
+<meta property="og:url" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/index.html">
+<meta property="og:site_name" content="fuubar2">
+<meta property="og:description" content="Iptables是在Linux内核中的一个防火墙，今天写这篇博客是为了记录某个实验中对防火墙所需做的配置和过程中遇到的报错。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560212601237.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560212992279.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560212960553.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560176611570.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560213928133.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560156953394.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560156971926.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560170482600.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560175170816.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560174985948.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560175698520.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560176816404.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560175741155.png">
+<meta property="og:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560215766169.png">
+<meta property="og:updated_time" content="2019-06-11T11:00:35.485Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iptables防火墙配置">
+<meta name="twitter:description" content="Iptables是在Linux内核中的一个防火墙，今天写这篇博客是为了记录某个实验中对防火墙所需做的配置和过程中遇到的报错。">
+<meta name="twitter:image" content="https://bookchi.github.io/2019/06/11/iptables防火墙配置/1560212601237.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="fuubar2" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://bookchi.github.io/2019/06/11/iptables防火墙配置/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iptables防火墙配置 | fuubar2</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <a href="https://github.com/bookchi" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">fuubar2</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://bookchi.github.io/2019/06/11/iptables防火墙配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fuubar">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="fuubar2">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iptables防火墙配置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-06-11 18:47:11 / Modified: 19:00:35" itemprop="dateCreated datePublished" datetime="2019-06-11T18:47:11+08:00">2019-06-11</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/网络安全实验/" itemprop="url" rel="index"><span itemprop="name">网络安全实验</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/网络安全实验/防火墙/" itemprop="url" rel="index"><span itemprop="name">防火墙</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p> Iptables是在Linux内核中的一个防火墙，今天写这篇博客是为了记录某个实验中对防火墙所需做的配置和过程中遇到的报错。</p>
+<a id="more"></a>
+<h2 id="1-网络环境配置"><a href="#1-网络环境配置" class="headerlink" title="1 网络环境配置"></a>1 网络环境配置</h2><h3 id="1-1-环境配置"><a href="#1-1-环境配置" class="headerlink" title="1.1 环境配置"></a>1.1 环境配置</h3><h4 id="1-1-1-实验环境"><a href="#1-1-1-实验环境" class="headerlink" title="1.1.1 实验环境"></a>1.1.1 实验环境</h4><p>物理机：Windows 10</p>
+<p>虚拟机：VMware Workstation 14 pro</p>
+<p>虚拟机镜像：Ubuntu 16、Ubuntu 18</p>
+<p>网络拓扑：</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560212601237.png" width="600px"></p>
+<h4 id="1-1-2-配置步骤："><a href="#1-1-2-配置步骤：" class="headerlink" title="1.1.2 配置步骤："></a>1.1.2 配置步骤：</h4><ol>
+<li><p>配置m2，创建两个网卡</p>
+<ul>
+<li><p>编辑虚拟机设置-&gt;添加网络适配器。一块网卡设置为桥接模式，用于和外网通信；另一块设置为仅主机模式，用于和内网通信。</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560212992279.png" width="400px"></p>
+</li>
+<li><p>查看m2的网络信息</p>
+<p>使用<code>ifconfig</code>查看m2网卡信息：</p>
+<p>内网网卡：ens38    内网IP：192.168.119.129</p>
+<p>外网网卡：ens33    外网IP：192.168.0.120</p>
+</li>
+<li><p>配置m2网络</p>
+<p>为了保证实验过程中内网IP不变，可设置内网IP为静态IP。具体方法如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/network/interfaces</span><br><span class="line"><span class="meta">#</span> 添加如下语句</span><br><span class="line">auto ens38 inet static</span><br><span class="line">address 192.168.119.129</span><br><span class="line">netmask 255.255.255.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打开IP转发限制</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/sysctl.conf</span><br><span class="line"><span class="meta">#</span> 将ipv4.ip_forward=1注释掉</span><br><span class="line">ipv4.ip_forward=1</span><br><span class="line"><span class="meta">#</span> 更新配置，使之生效</span><br><span class="line">sysctl -p /etc/systcl.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>配置m1,m3</p>
+<p>m1和m3的配置类似，这里就以m1的配置为例。</p>
+<ul>
+<li><p>编辑虚拟机设置-&gt;网络适配器改为仅主机模式</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560212960553.png" width="400px"></p>
+</li>
+<li><p>查看m1网卡信息</p>
+<p>打开虚拟机，通过<code>ifconfig</code>命令查看网卡信息。</p>
+<p>内网网卡：ens33    内网IP：192.168.119.128</p>
+</li>
+<li><p>配置m1网络</p>
+<p>为了形成上面所画的拓扑图，需要将m1的网关修改为m2，具体方法如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 打开网卡配置文件</span><br><span class="line">sudo vim /etc/network/interfaces</span><br><span class="line"><span class="meta">#</span> 设置静态IP，修改网关</span><br><span class="line">auto ens33 </span><br><span class="line">iface ens33 inet static</span><br><span class="line">address 192.168.119.128</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">gateway 192.168.119.129</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>保存重启虚拟机，使用<code>route -n</code>命令查看网关：</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560176611570.png" width="600px"></p>
+</li>
+</ul>
+</li>
+</ol>
+<p>m3的配置与m1类似，唯一的不同是使用<code>ifconfig</code>查看网卡信息，其IP为<code>192.168.119.130</code>。</p>
+<h3 id="1-2-环境测试"><a href="#1-2-环境测试" class="headerlink" title="1.2 环境测试"></a>1.2 环境测试</h3><pre><code>这里还是以m1作为代表进行测试。
+</code></pre><ul>
+<li><p>外网主机访问m1、m2的内网地址和m2的外网地址</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560213928133.png" width="600px"></p>
+<p>发现只有m2的外网地址可以ping通，其他两者都ping不同，说明配置正确。</p>
+</li>
+<li><p>内网主机m1访问外网</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560156953394.png" width="600px"></p>
+<p>m1无法访问外网。</p>
+</li>
+</ul>
+<h2 id="2-iptables规则配置"><a href="#2-iptables规则配置" class="headerlink" title="2 iptables规则配置"></a>2 iptables规则配置</h2><h3 id="2-1-Part-A"><a href="#2-1-Part-A" class="headerlink" title="2.1 Part A"></a>2.1 Part A</h3><ul>
+<li><p>利用<code>MASQUERADE</code>使内网IP对外部网络是隐藏的</p>
+<p>使用如下命令添加规则：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -t nat -A POSTROUTING -s 192.168.119.128,192.168.119.130 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560156971926.png" width="600px"></p>
+</li>
+<li><p>m1,m3对外网仅允许ssh</p>
+<p>具体命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> ssh可连接外网</span><br><span class="line">sudo iptables -A FORWARD -s 192.168.119.128,192.168.119.130 -p tcp --dport 22 -j ACCEPT</span><br><span class="line"><span class="meta">#</span> 外网的ssh数据可返回</span><br><span class="line">sudo iptables -A  FORWARD -p tcp --sport 22 -j ACCEPT  </span><br><span class="line"><span class="meta">#</span> 其他的不可出</span><br><span class="line">sudo iptables -A FORWARD ! -d 192.168.119.0/24 -j DROP</span><br></pre></td></tr></table></figure>
+<p>m1上效果如下：</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560170482600.png" width="600px"></p>
+<p>观察到，m1访问外网时，只允许ssh。而其他的均不允许，ping和ftp都无法成功。m3同理。</p>
+</li>
+</ul>
+<h3 id="2-2-Part-B"><a href="#2-2-Part-B" class="headerlink" title="2.2 Part B"></a>2.2 Part B</h3><ul>
+<li><p>允许m2发起ssh连接或发起ssh连接到m2</p>
+<p>具体命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> ssh</span><br><span class="line">sudo iptables -A INPUT -d 192.168.0.120,192.168.119.129 -p tcp --dport 22 -j ACCEPT</span><br><span class="line">sudo iptables -A OUTPUT -s 192.168.0.120,192.168.119.129 -p tcp --sport 22 -j ACCEPT</span><br><span class="line"></span><br><span class="line">sudo iptables -A OUTPUT -s 192.168.0.120,192.168.119.129 -p tcp --dport 22 -j ACCEPT</span><br><span class="line">sudo iptables -A INPUT -d 192.168.0.120,192.168.119.129 -p tcp --sport 22 -j ACCEPT</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>允许来自m2或目的为m2的ping</p>
+<p>具体命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> ping</span><br><span class="line">sudo iptables -A INPUT -d 192.168.119.129,192.168.0.120 -p icmp -j ACCEPT</span><br><span class="line">sudo iptables -A OUTPUT -s 192.168.119.129,192.168.0.120 -p icmp -j ACCEPT</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>封锁其他来自m2或目的为m2的流量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 其他的都丢弃</span><br><span class="line">sudo iptables -A INPUT -d 192.168.119.129,192.168.0.120 -j DROP</span><br><span class="line">sudo iptables -A OUTPUT -s 192.168.119.129,192.168.0.120 -j DROP</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>配置完以上<code>iptables</code>规则后，进行效果测试，结果如下：</p>
+<ul>
+<li><p>m2和内网通信，只有ssh是被允许的</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560175170816.png" width="600px"></p>
+<p>可以观察到，只有ssh可以连接成功，ftp和ping都无法成功。</p>
+</li>
+<li><p>m2和外网通信，只有ssh是被允许的</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560174985948.png" width="600px"></p>
+<p>可以观察到，只有ssh可以连接成功，ftp和ping都无法成功。</p>
+</li>
+</ul>
+<h3 id="2-3-Part-C"><a href="#2-3-Part-C" class="headerlink" title="2.3 Part C"></a>2.3 Part C</h3><ul>
+<li><p>清空Part B中的规则</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> flush</span><br><span class="line">sudo iptables -F INPUT</span><br><span class="line">sudo iptables -F OUTPUT</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>仅允许m1到外网主机的ssh连接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> ssh</span><br><span class="line">sudo iptables -A FORWARD -s 192.168.119.130 -p tcp --dport 22 -j DROP</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其他的全部拒绝</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 其他block</span><br><span class="line">sudo iptables -A INPUT -j DROP</span><br><span class="line">sudo iptables -A OUTPUT -j DROP</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>配置完以上<code>iptables</code>规则后，进行效果测试，结果如下：</p>
+<ul>
+<li><p>m1可以对外网主机建立ssh连接</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560175698520.png" width="600px"></p>
+</li>
+<li><p>m3不可以对外网主机建立ssh连接</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560176816404.png" width="600px"></p>
+</li>
+<li><p>其他的流量都被拒绝</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560175741155.png" width="600px"></p>
+</li>
+</ul>
+<h2 id="3-可能的报错"><a href="#3-可能的报错" class="headerlink" title="3 可能的报错"></a>3 可能的报错</h2><p>本实验是为了解iptables的规则配置。在配置过程中，遇到了一些问题。</p>
+<ul>
+<li><p>使用<code>! --dport 22</code>时报错</p>
+<p>为了丢弃非ssh流量，需要表示不是22端口的流量。然而当使用<code>! --dport 22</code>命令时却会报错。经过<code>man iptables</code>查阅官方手册找到了原因。</p>
+<p><img src="/2019/06/11/iptables防火墙配置/1560215766169.png" width="500px"></p>
+<pre><code>原因在于`--dport`只是`-p tcp/udp`的一个扩展，前面必须要有`-p`才可。因此要丢弃非ssh流量，不能把思路局限于此处。
+</code></pre></li>
+<li><p>内网环境配置失败</p>
+<p>配置内网环境时，更改<code>/etc/netwodk/interfaces</code>文件并重启虚拟机后，并没有任何改变。经过排查，发现原因在于最初使用的机器是<code>UbuntuServer</code>，更改为<code>Ubuntu 16</code>后该问题顺利解决。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <p><span>本文标题:</span><a href="/2019/06/11/iptables防火墙配置/">iptables防火墙配置</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 fuubar 的个人博客">fuubar</a></p>
+  <p><span>发布时间:</span>2019年06月11日 - 18:06</p>
+  <p><span>最后更新:</span>2019年06月11日 - 19:06</p>
+  <p><span>原始链接:</span><a href="/2019/06/11/iptables防火墙配置/" title="iptables防火墙配置">https://bookchi.github.io/2019/06/11/iptables防火墙配置/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://bookchi.github.io/2019/06/11/iptables防火墙配置/"  aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+</div>
+<script> 
+    var clipboard = new Clipboard('.fa-clipboard');
+    $(".fa-clipboard").click(function(){
+      clipboard.on('success', function(){
+        swal({   
+          title: "",   
+          text: '复制成功',
+          icon: "success", 
+          showConfirmButton: true
+          });
+    });
+    });  
+</script>
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/防火墙/" rel="tag"># 防火墙</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/31/SQL注入与防御/" rel="next" title="SQL注入与防御">
+                <i class="fa fa-chevron-left"></i> SQL注入与防御
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">fuubar</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-网络环境配置"><span class="nav-number">1.</span> <span class="nav-text">1 网络环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-环境配置"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-1-实验环境"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1.1 实验环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-2-配置步骤："><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1.2 配置步骤：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-环境测试"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 环境测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-iptables规则配置"><span class="nav-number">2.</span> <span class="nav-text">2 iptables规则配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Part-A"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Part A</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Part-B"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Part B</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Part-C"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Part C</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-可能的报错"><span class="nav-number">3.</span> <span class="nav-text">3 可能的报错</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fuubar</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a> v6.4.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
