@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://vulnner.github.io/"/>
-  <updated>2020-04-05T03:32:38.328Z</updated>
+  <updated>2021-01-05T14:07:01.787Z</updated>
   <id>https://vulnner.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2021展望</title>
+    <link href="https://vulnner.github.io/2021/01/04/2021%E5%B1%95%E6%9C%9B/"/>
+    <id>https://vulnner.github.io/2021/01/04/2021展望/</id>
+    <published>2021-01-04T13:49:58.000Z</published>
+    <updated>2021-01-05T14:07:01.787Z</updated>
+    
+    <content type="html"><![CDATA[<p>2020已经结束，2021刚刚到来，回顾2020，我是否完成或达到了我最初的目标呢？答案显然是否定的，需要反思。</p><p>来问一个问题，2021，我想达到什么目标，或者掌握什么技能呢？</p><blockquote><p> 一个总的目标：掌握我一直以来在找寻的本质和界限。</p><p>目标：</p><ul><li>二进制完成入门+一定程度的精通；</li><li>学完并掌握汇编和OS。</li><li>工作中Web安全的不断巩固和拓展</li></ul></blockquote><p>在安全上，大概有以下几个方向：</p><ul><li><p>web方向</p><p>web方向可以说是大部分的入门方向，我对web的理解足够吗？显然是不够的，我对一些最本质的东西还缺乏了解，对JS的掌握显然也不够，但是目前我没有去学习js的打算。</p></li><li><p>二进制方面：逆向、pwn、缓冲区溢出等漏洞</p><p>在这方面，首先，需要看b站的视频，边看边实践+理解，过程中可能会遇到一些问题，首先需要查阅资料搞懂一段汇编代码，将它和c程序、内存关联起来。先来列一下步骤：</p><p>step1. 看b站的视频，认真理解+记录，看完一个后总结，搜索感到疑惑的地方。</p><p>step2. b站视频刷完后，整体回顾，总结写成博客，完成基本漏洞的了解。</p><p>step3. 去刷xctf上的题目，进行巩固，practice makes perfect。</p><p>step3. 去看看雪上二进制方面的精华帖，不断思考，实践并写博客。</p></li></ul><p>而在基础课程上，我应该还需要学习汇编语言、操作系统、编译原理、计算机网络这些基础课程。但是想学的太多，没想好要怎么分配，并且如果要学这些的话，需要大量的时间和精力投入，所以先来定一下目标，等到上一个目标完成后，再来践行这个。</p><p>希望我可以自信地说”我在安全领域已经有有那么一点成就了”。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;2020已经结束，2021刚刚到来，回顾2020，我是否完成或达到了我最初的目标呢？答案显然是否定的，需要反思。&lt;/p&gt;
+&lt;p&gt;来问一个问题，2021，我想达到什么目标，或者掌握什么技能呢？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt; 一个总的目标：掌握我一直以来在找寻的本质
+      
+    
+    </summary>
+    
+      <category term="随笔" scheme="https://vulnner.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+      <category term="随笔" scheme="https://vulnner.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
   
   <entry>
     <title>test_article</title>
