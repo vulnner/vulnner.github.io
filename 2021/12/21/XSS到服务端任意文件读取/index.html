@@ -6,19 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="PDF生成漏洞：从XSS到服务端任意文件读取一、 前言XSS是最为常见的Web漏洞之一，多年来连续入选OWASP TOP 10，相信大家都耳熟能详。 它是一种代码注入类的攻击，是一种客户端侧的攻击，攻击者通过在Web应用中注入恶意JavaScript代码，通过点击URL，最终在受害者浏览器端执行的一种漏洞。主要有反射型XSS、存储型XSS、基于DOM的XSS三类。 XSS一些比较常规的危害大概有：">
+    <meta name="description" content="XSS是最为常见的Web漏洞之一，多年来连续入选OWASP TOP 10，它是一种代码注入类的攻击，是一种客户端侧的攻击，攻击者通过在Web应用中注入恶意JavaScript代码，通过点击URL，最终在受害者浏览器端执行的一种漏洞。主要有反射型XSS、存储型XSS、基于DOM的XSS三类。 XSS一些比较常规的危害大概有：重定向浏览器、窃取Cookie、浏览器劫持等。 与常规的XSS介绍不同，本篇">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XSS到服务端任意文件读取">
 <meta property="og:url" content="https://vulnner.github.io/2021/12/21/XSS%E5%88%B0%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/index.html">
 <meta property="og:site_name" content="Vulnner">
-<meta property="og:description" content="PDF生成漏洞：从XSS到服务端任意文件读取一、 前言XSS是最为常见的Web漏洞之一，多年来连续入选OWASP TOP 10，相信大家都耳熟能详。 它是一种代码注入类的攻击，是一种客户端侧的攻击，攻击者通过在Web应用中注入恶意JavaScript代码，通过点击URL，最终在受害者浏览器端执行的一种漏洞。主要有反射型XSS、存储型XSS、基于DOM的XSS三类。 XSS一些比较常规的危害大概有：">
+<meta property="og:description" content="XSS是最为常见的Web漏洞之一，多年来连续入选OWASP TOP 10，它是一种代码注入类的攻击，是一种客户端侧的攻击，攻击者通过在Web应用中注入恶意JavaScript代码，通过点击URL，最终在受害者浏览器端执行的一种漏洞。主要有反射型XSS、存储型XSS、基于DOM的XSS三类。 XSS一些比较常规的危害大概有：重定向浏览器、窃取Cookie、浏览器劫持等。 与常规的XSS介绍不同，本篇">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://vulnner.github.io/.io//image-20211023174701560.png">
 <meta property="og:image" content="https://vulnner.github.io/.io//image-20211023175134382.png">
 <meta property="og:image" content="https://vulnner.github.io/.io//image-20211023175525094.png">
 <meta property="og:image" content="https://vulnner.github.io/.io//image-20211023175853358.png">
 <meta property="article:published_time" content="2021-12-21T14:53:49.000Z">
-<meta property="article:modified_time" content="2021-12-21T14:54:54.587Z">
+<meta property="article:modified_time" content="2021-12-21T14:57:26.077Z">
 <meta property="article:author" content="vulnner">
 <meta property="article:tag" content="web">
 <meta property="article:tag" content="vulns">
@@ -86,6 +86,8 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" href="/2022/01/02/ssrf%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93-%E8%B5%B7/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
         
         <li><a class="icon" href="/2021/11/20/sql%E7%9B%B2%E6%B3%A8%E8%84%9A%E6%9C%AC%E8%AE%B0%E5%BD%95/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
@@ -115,7 +117,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PDF%E7%94%9F%E6%88%90%E6%BC%8F%E6%B4%9E%EF%BC%9A%E4%BB%8EXSS%E5%88%B0%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">1.</span> <span class="toc-text">PDF生成漏洞：从XSS到服务端任意文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一、 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E6%BC%8F%E6%B4%9E%E8%AF%A6%E6%83%85"><span class="toc-number">1.2.</span> <span class="toc-text">二、 漏洞详情</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%80%BB%E7%BB%93"><span class="toc-number">1.3.</span> <span class="toc-text">三、 总结</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E6%BC%8F%E6%B4%9E%E8%AF%A6%E6%83%85"><span class="toc-number">1.</span> <span class="toc-text">二、 漏洞详情</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">三、 总结</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -159,8 +161,7 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="PDF生成漏洞：从XSS到服务端任意文件读取"><a href="#PDF生成漏洞：从XSS到服务端任意文件读取" class="headerlink" title="PDF生成漏洞：从XSS到服务端任意文件读取"></a>PDF生成漏洞：从XSS到服务端任意文件读取</h2><h3 id="一、-前言"><a href="#一、-前言" class="headerlink" title="一、 前言"></a>一、 前言</h3><p>XSS是最为常见的Web漏洞之一，多年来连续入选OWASP TOP 10，相信大家都耳熟能详。</p>
-<p>它是一种代码注入类的攻击，是一种客户端侧的攻击，攻击者通过在Web应用中注入恶意JavaScript代码，通过点击URL，最终在受害者浏览器端执行的一种漏洞。主要有反射型XSS、存储型XSS、基于DOM的XSS三类。</p>
+    <p>XSS是最为常见的Web漏洞之一，多年来连续入选OWASP TOP 10，它是一种代码注入类的攻击，是一种客户端侧的攻击，攻击者通过在Web应用中注入恶意JavaScript代码，通过点击URL，最终在受害者浏览器端执行的一种漏洞。主要有反射型XSS、存储型XSS、基于DOM的XSS三类。</p>
 <p>XSS一些比较常规的危害大概有：重定向浏览器、窃取Cookie、浏览器劫持等。</p>
 <p>与常规的XSS介绍不同，本篇文章侧重于发现XSS后的进一步利用。</p>
 <p>主要介绍在某次实际测试过程中，发现XSS漏洞之后，如何进一步的利用，最终通过XSS达到服务端任意文件读取的危害。</p>
@@ -227,7 +228,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PDF%E7%94%9F%E6%88%90%E6%BC%8F%E6%B4%9E%EF%BC%9A%E4%BB%8EXSS%E5%88%B0%E6%9C%8D%E5%8A%A1%E7%AB%AF%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">1.</span> <span class="toc-text">PDF生成漏洞：从XSS到服务端任意文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一、 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E6%BC%8F%E6%B4%9E%E8%AF%A6%E6%83%85"><span class="toc-number">1.2.</span> <span class="toc-text">二、 漏洞详情</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%80%BB%E7%BB%93"><span class="toc-number">1.3.</span> <span class="toc-text">三、 总结</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E6%BC%8F%E6%B4%9E%E8%AF%A6%E6%83%85"><span class="toc-number">1.</span> <span class="toc-text">二、 漏洞详情</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">三、 总结</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
@@ -263,7 +264,7 @@
     Copyright &copy;
     
     
-    2016-2021
+    2016-2022
     vulnner
   </div>
   <div class="footer-right">
